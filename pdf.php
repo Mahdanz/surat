@@ -10,7 +10,7 @@ $query1 = mysqli_fetch_array($koneksi->query("SELECT * FROM tb_surat WHERE id_su
 
 // The location of the PDF file
 // on the server
-$filename = "file/" . $query1['nm_file'];
+$filename = "file/dokumen/" . $query1['nm_file'];
 
 // Header content type
 header("Content-type: application/pdf");

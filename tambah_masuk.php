@@ -13,7 +13,6 @@ $keaslian = $_POST['keaslian'];
 $arsip = $_POST['arsip'];
 $tipe = $_POST['tipe'];
 
-
 $ekstensi =  array('pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png');
 
 $x = explode('.', $filename);

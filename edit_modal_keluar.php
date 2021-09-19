@@ -1,5 +1,5 @@
                     <!-- MODAL EDIT -->
-                    <div class="modal fade" id="modaleditmasuk<?php echo $d['id_surat'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="modaleditkeluar<?php echo $d['id_surat'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -8,7 +8,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form role="form" action="edit_masuk.php" method="get">
+                                    <form role="form" action="edit_keluar.php" method="get">
                                         <?php
                                         $id = $d['id_surat'];
                                         $query_edit = mysqli_query($koneksi, "SELECT * FROM tb_surat WHERE id_surat='$id'");
@@ -29,7 +29,11 @@
                                             </div>
                                             <div class="mb-3">
                                                 <label for="message-text" class="col-form-label"><i class="far fa-paper-plane"></i> Pengirim:</label>
-                                                <input class="form-control" id="message-text" name="pengirim" value="<?php echo $row['pengirim'] ?>">
+                                                <input class="form-control" id="message-text" name="penerima" value="<?php echo $row['penerima'] ?>">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="message-text" class="col-form-label"><i class="far fa-paper-plane"></i> Pengirim:</label>
+                                                <input class="form-control" id="message-text" name="tembusan" value="<?php echo $row['tembusan'] ?>">
                                             </div>
                                             <div class="mb-3">
                                                 <label for="message-text" class="col-form-label"><i class="far fa-clipboard"></i> Perihal:</label>
@@ -78,8 +82,7 @@
                                                 <input class="form-control" disable id="formFile" name="nm_file" value="<?php echo $row['nm_file'] ?>" disabled>
                                             </div>
                                             <input type="hidden" name="id_surat" value="<?php echo $row['id_surat'] ?>">
-                                            <input type="hidden" name="penerima" value="">
-                                            <input type="hidden" name="tembusan" value="">
+                                            <input type="hidden" name="pengirim" value="">
                                             <input type="hidden" name="tipe" value="masuk">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>

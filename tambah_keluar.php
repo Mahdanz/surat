@@ -14,7 +14,7 @@ $arsip = $_POST['arsip'];
 $tipe = $_POST['tipe'];
 
 
-$ekstensi =  array('pdf', 'doc', 'docx');
+$ekstensi =  array('pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png');
 
 $x = explode('.', $filename);
 // $ekstensiboleh = strtolower(end($x)); 
@@ -24,10 +24,14 @@ $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
 if (in_array($ext, $ekstensi) === true) {
 
-
+    if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png') {
+        move_uploaded_file($_FILES['nm_file']['tmp_name'], 'file/gambar/' . $filename);
+    } else {
+        move_uploaded_file($_FILES['nm_file']['tmp_name'], 'file/dokumen/' . $filename);
+    }
 
     //simpan data ke database
-    move_uploaded_file($_FILES['nm_file']['tmp_name'], 'file/' . $filename);
+
     $result = mysqli_query($koneksi, "INSERT INTO tb_surat (no_surat,tgl,pengirim,penerima,tembusan,perihal,nm_file, sifat, keaslian, arsip, tipe) VALUES('$no_surat','$tgl','$pengirim','$penerima','$tembusan','$perihal', '$filename', '$sifat', '$keaslian', '$arsip', '$tipe')");
     // header("location:index.php?alert=berhasil");
     if (!$result) {
