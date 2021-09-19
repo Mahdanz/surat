@@ -45,7 +45,6 @@ include 'koneksi.php'; ?>
                         <form method="POST" action="">
                             <table>
                                 <tr>
-
                                     <td><input type="date" placeholder="Start" name="date1" required="required" class="me-3"></td>
                                     <td> - </td>
                                     <td><input type="date" placeholder="End" name="date2" required="required" class="ms-3"></td>
@@ -105,7 +104,7 @@ include 'koneksi.php'; ?>
 
                         <?php
                         $no = 1;
-                        $batas = 1;
+                        $batas = 10;
                         $halaman = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
                         $halaman_awal = ($halaman > 1) ? ($halaman * $batas) - $batas : 0;
 
