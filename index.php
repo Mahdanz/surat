@@ -2,13 +2,9 @@
 include 'koneksi.php'; ?>
 
 <body>
-
-    <!-- ======= Mobile nav toggle button ======= -->
-    <!-- <button type="button" class="mobile-nav-toggle d-xl-none"><i class="bi bi-list mobile-nav-toggle"></i></button> -->
-
+ 
     <!-- ======= Header ======= -->
     <header id="header" class="d-flex flex-column justify-content-center">
-
         <nav id="navbar" class="navbar nav-menu">
             <ul>
                 <li><a href="index.php" class="nav-link scrollto"><i class='bx bx-archive-in'></i><span>Surat Masuk</span></a></li>
@@ -16,7 +12,6 @@ include 'koneksi.php'; ?>
             </ul>
         </nav>
         <!-- .nav-menu -->
-
     </header>
     <!-- End Header -->
 
@@ -41,6 +36,19 @@ include 'koneksi.php'; ?>
                             </div>
                         </form>
                     </div>
+                    <div class="col-lg-7">
+                        <form method="POST" action="">
+                            <table>
+                                <tr>
+                                    <td><input type="date" placeholder="Start" name="date1" required="required" class="me-3"></td>
+                                    <td> - </td>
+                                    <td><input type="date" placeholder="End" name="date2" required="required" class="ms-3"></td>
+                                    <td><input type="submit" class="btn btn-primary ms-3" name="search" value="Filter"></td>
+                                </tr>
+                            </table>
+                        </form>
+
+                    </div>
                     <div class="col-lg-1 pt-1 pt-lg-0 content">
                         <div class="dropdown">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modaltambahmasuk" id="tambahmasuk">
@@ -59,8 +67,8 @@ include 'koneksi.php'; ?>
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Nomor Surat</th>
                             <th scope="col">Tgl Surat</th>
+                            <th scope="col">Nomor Surat</th>
                             <th scope="col">Kode Arsip</th>
                             <th scope="col">Pengirim</th>
                             <th scope="col">Perihal</th>
@@ -72,45 +80,25 @@ include 'koneksi.php'; ?>
                     <tbody>
                         <?php
                         $no = 1;
+                        $batas = 10;
+                        $halaman = isset($_GET['halaman']) ? (int)$_GET['halaman'] : 1;
+                        $halaman_awal = ($halaman > 1) ? ($halaman * $batas) - $batas : 0;
+
+                        $previous = $halaman - 1;
+                        $next = $halaman + 1;
+
+                        $data_hal = mysqli_query($koneksi, "select * from tb_surat");
+                        $jumlah_data = mysqli_num_rows($data_hal);
+                        $total_halaman = ceil($jumlah_data / $batas);
+
                         if (isset($_GET['cari'])) {
                             $cari = $_GET['cari'];
-                            $data = mysqli_query($koneksi, "select * from tb_surat where tipe ='keluar' AND no_surat like '%" . $cari . "%' OR tgl like '%" . $cari . "%' OR arsip like '%" . $cari . "%' OR pengirim like '%" . $cari . "%' OR perihal like '%" . $cari . "%' OR nm_file like '%" . $cari . "%' ORDER BY id_surat ASC ");
+                            $data = mysqli_query($koneksi, "select * from tb_surat where tipe ='masuk' AND no_surat like '%" . $cari . "%' OR tgl like '%" . $cari . "%' OR arsip like '%" . $cari . "%' OR pengirim like '%" . $cari . "%' OR perihal like '%" . $cari . "%' OR nm_file like '%" . $cari . "%' ORDER BY id_surat DESC ");
                             while ($d = mysqli_fetch_array($data)) {
                         ?>
 
-                                <tr>
-                                    <td scope="row"><?php echo $no++; ?></td>
-                                    <td><?php echo $d['no_surat']; ?></td>
-                                    <td><?php echo $d['tgl']; ?></td>
-                                    <td><?php echo $d['arsip']; ?></td>
-                                    <td><?php echo $d['pengirim']; ?></td>
-                                    <td><?php echo $d['perihal']; ?></td>
-                                    <td><?php echo $d['sifat'];
-                                        echo " . ";
-                                        echo $d['keaslian']; ?></td>
-
-                                    <td class=" center">
-                                        <a href="pdf.php?id=<?php echo $d['id_surat']; ?>" target="_blank"><i type="button" class="fas fa-file-download"></i></a>
-                                    </td>
-
-                                    <td style="color: #212529; text-decoration: none;">
-
-                                        <i type="button" class="far fa-edit" data-bs-toggle="modal" data-bs-target="#modaleditmasuk<?php echo $d['id_surat']; ?>" id="editmasuk"></i>
-                                        <style>
-                                            .modal-backdrop {
-                                                z-index: -1;
-                                            }
-                                        </style>
-
-                                        <a href="hapusmasuk.php?id=<?php echo $d['id_surat']; ?>">
-                                            <i type="button" class="far fa-trash-alt"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-
-
+                                <?php include 'list_masuk.php' ?>
                     </tbody>
-
 
                     <!-- MODAL EDIT -->
                     <?php include('edit_modal_masuk.php'); ?>
@@ -118,72 +106,63 @@ include 'koneksi.php'; ?>
 
                 <?php
                             }
-                        } else {
-                            $data = mysqli_query($koneksi, "select * from tb_surat WHERE tipe='masuk'");
-                            while ($d = mysqli_fetch_array($data)) {
+                        } elseif (isset($_POST['search'])) {
+                            $date1 = date("Y-m-d", strtotime($_POST['date1']));
+                            $date2 = date("Y-m-d", strtotime($_POST['date2']));
+                            $data = mysqli_query($koneksi, "SELECT * FROM tb_surat WHERE tgl BETWEEN '$date1' AND '$date2'");
+                            while ($d = mysqli_fetch_assoc($data)) {
                 ?>
 
-
-                    <tr>
-                        <td scope="row"><?php echo $no++; ?></td>
-                        <td><?php echo $d['no_surat']; ?></td>
-                        <td><?php echo $d['tgl']; ?></td>
-                        <td><?php echo $d['arsip']; ?></td>
-                        <td><?php echo $d['pengirim']; ?></td>
-                        <td><?php echo $d['perihal']; ?></td>
-                        <td><?php echo $d['sifat'];
-                                echo " . ";
-                                echo $d['keaslian']; ?></td>
-
-                        <td class=" center">
-                            <a href="pdf.php?id=<?php echo $d['id_surat']; ?>" target="_blank"><i type="button" class="fas fa-file-download"></i></a>
-                        </td>
-
-                        <td style="color: #212529; text-decoration: none;">
-
-                            <i type="button" class="far fa-edit" data-bs-toggle="modal" data-bs-target="#modaleditmasuk<?php echo $d['id_surat']; ?>" id="editmasuk"></i>
-                            <style>
-                                .modal-backdrop {
-                                    z-index: -1;
-                                }
-                            </style>
-
-                            <a href="hapusmasuk.php?id=<?php echo $d['id_surat'] ?>">
-                                <i type="button" class="far fa-trash-alt"></i>
-                            </a>
-                        </td>
-                    </tr>
-
-
-                    </tbody>
-
+                    <?php include 'list_masuk.php' ?>
 
                     <!-- MODAL EDIT -->
                     <?php include('edit_modal_masuk.php') ?>
                     <!-- MODAL EDIT -->
 
-
+                <?php
+                            }
+                        } else {
+                            $data = mysqli_query($koneksi, "select * from tb_surat WHERE tipe='masuk' ORDER BY id_surat DESC limit $halaman_awal, $batas   ");
+                            $nomor = $halaman_awal + 1;
+                            while ($d = mysqli_fetch_array($data)) {
+                ?>
+                    <?php include 'list_masuk.php' ?>
+                    </tbody>
+                    <!-- MODAL EDIT -->
+                    <?php include('edit_modal_masuk.php') ?>
+                    <!-- MODAL EDIT -->
+                    
             <?php
                             }
                         } ?>
+
                 </table>
+
+                <nav>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" <?php if ($halaman > 1) {
+                                                        echo "href='?halaman=$previous'";
+                                                    } ?>>Previous</a>
+                        </li>
+                        <?php
+                        for ($x = 1; $x <= $total_halaman; $x++) {
+                        ?>
+                            <li class="page-item"><a class="page-link" href="?halaman=<?php echo $x ?>"><?php echo $x; ?></a></li>
+                        <?php
+                        }
+                        ?>
+                        <li class="page-item">
+                            <a class="page-link" <?php if ($halaman < $total_halaman) {
+                                                        echo "href='?halaman=$next'";
+                                                    } ?>>Next</a>
+                        </li>
+                    </ul>
+                </nav>
+
             </div>
         </section>
         <!-- End About Section -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <!-- MODAL TAMBAH -->
         <div class="modal fade" id="modaltambahmasuk" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -198,11 +177,7 @@ include 'koneksi.php'; ?>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label"><i class="fas fa-list-ol"></i> Nomor Surat:</label>
                                 <input type="text" class="form-control" id="recipient-name" name="no_surat">
-                            </div>
-                            <div class="mb-3">
-                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
-                                <input class="form-control" type="date" id="message-text" name="tgl">
-                            </div>
+                            </div> 
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label"><i class="far fa-window-restore"></i> Kode Arsip:</label>
                                 <input class="form-control" id="message-text" name="arsip">
@@ -214,6 +189,10 @@ include 'koneksi.php'; ?>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label"><i class="far fa-clipboard"></i> Perihal:</label>
                                 <input class="form-control" id="message-text" name="perihal">
+                            </div> 
+							<div class="col-6">
+                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
+                                <input class="form-control" type="date" id="message-text" name="tgl">
                             </div>
                             <div class="mb-3">
                                 <div class="column">
@@ -271,37 +250,8 @@ include 'koneksi.php'; ?>
             </div>
         </div>
         <!-- MODAL TAMBAH -->
-
-
-
-
     </main>
-    <!-- End #main -->
-
-    <!-- ======= Footer ======= -->
-    <!-- <footer id="footer">
-        <div class="container">
-            <h3>Brandon Johnson</h3>
-            <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
-            <div class="social-links">
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-            </div>
-            <div class="copyright">
-                &copy; Copyright <strong><span>MyResume</span></strong>. All Rights Reserved
-            </div>
-            <div class="credits">
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
-        </div>
-    </footer> -->
-    <!-- End Footer -->
-
-
-    <!-- Vendor JS Files -->
+     <!-- Vendor JS Files -->
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>

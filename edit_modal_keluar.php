@@ -1,5 +1,6 @@
                     <!-- MODAL EDIT -->
-                    <div class="modal fade" id="modaleditkeluar<?php echo $d['id_surat'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="modaleditkeluar<?php echo $d['id_surat'] ?>" style="padding-bottom: 300px;
+    padding-top: 50px;" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -20,10 +21,6 @@
                                                 <input type="text" class="form-control" id="recipient-name" name="no_surat" value="<?php echo $row['no_surat'] ?>">
                                             </div>
                                             <div class="mb-3">
-                                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
-                                                <input class="form-control" type="date" id="message-text" name="tgl" value="<?php echo $row['tgl'] ?>">
-                                            </div>
-                                            <div class="mb-3">
                                                 <label for="message-text" class="col-form-label"><i class="far fa-window-restore"></i> Kode Arsip:</label>
                                                 <input class="form-control" id="message-text" name="arsip" value="<?php echo $row['arsip'] ?>">
                                             </div>
@@ -38,6 +35,10 @@
                                             <div class="mb-3">
                                                 <label for="message-text" class="col-form-label"><i class="far fa-clipboard"></i> Perihal:</label>
                                                 <input class="form-control" id="message-text" name="perihal" value="<?php echo $row['perihal'] ?>">
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
+                                                <input class="form-control" type="date" id="message-text" name="tgl" value="<?php echo $row['tgl'] ?>">
                                             </div>
                                             <div class="mb-3">
                                                 <div class="column">
@@ -83,7 +84,7 @@
                                             </div>
                                             <input type="hidden" name="id_surat" value="<?php echo $row['id_surat'] ?>">
                                             <input type="hidden" name="pengirim" value="">
-                                            <input type="hidden" name="tipe" value="masuk">
+                                            <input type="hidden" name="tipe" value="keluar">
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                                                 <button type="submit" class="btn btn-primary">Simpan</button>

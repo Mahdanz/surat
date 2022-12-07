@@ -52,25 +52,9 @@ include 'koneksi.php'; ?>
                                 </tr>
                             </table>
                         </form>
-                        <!-- <form class="form-inline" method="POST" action="">
-                            <label>Date:</label>
-                            <input type="date" class="form-control" placeholder="Start" name="date1" />
-                            <label>To</label>
-                            <input type="date" class="form-control" placeholder="End" name="date2" />
-                            <button class="btn btn-primary" name="search">Filter</button> <a href="index.php" type="button" class="btn btn-success"><span class="glyphicon glyphicon-refresh"><span></a>
-                        </form> -->
 
                     </div>
 
-                    <!-- <div class="col">
-                        <div class="col-lg-7">
-                            <form method="POST" class="form-inline">
-                                <input type="date" name="tgl_mulai" class="form-control">
-                                <input type="date" name="tgl_selesai" class="form-control mt-3">
-                                <button type="submit" name="filter_tgl" class="btn btn-secondary mt-3">Filter</button>
-                            </form>
-                        </div>
-                    </div> -->
                     <div class="col-lg-1 pt-1 pt-lg-0 content">
                         <div class="dropdown">
                             <button class="btn btn-secondary" type="button" data-bs-toggle="modal" data-bs-target="#modaltambahkeluar" id="tambahkeluar">
@@ -89,8 +73,8 @@ include 'koneksi.php'; ?>
                     <thead>
                         <tr>
                             <th scope="col">No.</th>
-                            <th scope="col">Nomor Surat</th>
                             <th scope="col">Tgl Surat</th>
+                            <th scope="col">Nomor Surat</th>
                             <th scope="col">Kode Arsip</th>
                             <th scope="col">Penerima</th>
                             <th scope="col">Tembusan</th>
@@ -117,11 +101,11 @@ include 'koneksi.php'; ?>
 
                         if (isset($_GET['cari'])) {
                             $cari = $_GET['cari'];
-                            $data = mysqli_query($koneksi, "select * from tb_surat where tipe ='keluar' AND no_surat like '%" . $cari . "%' OR tgl like '%" . $cari . "%' OR arsip like '%" . $cari . "%' OR pengirim like '%" . $cari . "%' OR perihal like '%" . $cari . "%' OR nm_file like '%" . $cari . "%' ORDER BY id_surat ASC ");
+                            $data = mysqli_query($koneksi, "select * from tb_surat where tipe ='keluar' AND no_surat like '%" . $cari . "%' OR tgl like '%" . $cari . "%' OR arsip like '%" . $cari . "%' OR pengirim like '%" . $cari . "%' OR perihal like '%" . $cari . "%' OR nm_file like '%" . $cari . "%' ORDER BY id_surat DESC ");
                             while ($d = mysqli_fetch_array($data)) {
                         ?>
 
-                                <?php include 'list.php' ?>
+                                <?php include 'list_keluar.php' ?>
 
 
                     </tbody>
@@ -139,7 +123,7 @@ include 'koneksi.php'; ?>
                             $data = mysqli_query($koneksi, "SELECT * FROM tb_surat WHERE tgl BETWEEN '$date1' AND '$date2'");
                             while ($d = mysqli_fetch_assoc($data)) {
                 ?>
-                    <?php include 'list.php' ?>
+                    <?php include 'list_keluar.php' ?>
 
                     <!-- MODAL EDIT -->
                     <?php include('edit_modal_keluar.php') ?>
@@ -150,13 +134,13 @@ include 'koneksi.php'; ?>
                 <?php
                             }
                         } else {
-                            $data = mysqli_query($koneksi, "select * from tb_surat WHERE tipe='keluar'  limit $halaman_awal, $batas");
+                            $data = mysqli_query($koneksi, "select * from tb_surat WHERE tipe='keluar' ORDER BY id_surat DESC limit $halaman_awal, $batas ");
                             $nomor = $halaman_awal + 1;
                             while ($d = mysqli_fetch_array($data)) {
                 ?>
 
 
-                    <?php include 'list.php' ?>
+                    <?php include 'list_keluar.php' ?>
 
                     </tbody>
 
@@ -196,21 +180,7 @@ include 'koneksi.php'; ?>
             </div>
         </section>
         <!-- End About Section -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
         <!-- MODAL TAMBAH -->
         <div class="modal fade" id="modaltambahkeluar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -224,10 +194,6 @@ include 'koneksi.php'; ?>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label"><i class="fas fa-list-ol"></i> Nomor Surat:</label>
                                 <input type="text" class="form-control" id="recipient-name" name="no_surat">
-                            </div>
-                            <div class="mb-3">
-                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
-                                <input class="form-control" type="date" id="message-text" name="tgl">
                             </div>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label"><i class="far fa-window-restore"></i> Kode Arsip:</label>
@@ -244,6 +210,10 @@ include 'koneksi.php'; ?>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label"><i class="far fa-clipboard"></i> Perihal:</label>
                                 <input class="form-control" id="message-text" name="perihal">
+                            </div>
+							<div class="col-6">
+                                <label for="message-text" class="col-form-label"><i class="far fa-calendar-alt"></i> Tanggal Surat:</label>
+                                <input class="form-control" type="date" id="message-text" name="tgl">
                             </div>
                             <div class="mb-3">
                                 <div class="column">
@@ -306,30 +276,7 @@ include 'koneksi.php'; ?>
 
     </main>
     <!-- End #main -->
-
-    <!-- ======= Footer ======= -->
-    <!-- <footer id="footer">
-        <div class="container">
-            <h3>Brandon Johnson</h3>
-            <p>Et aut eum quis fuga eos sunt ipsa nihil. Labore corporis magni eligendi fuga maxime saepe commodi placeat.</p>
-            <div class="social-links">
-                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
-                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
-                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
-                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
-                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-            </div>
-            <div class="copyright">
-                &copy; Copyright <strong><span>MyResume</span></strong>. All Rights Reserved
-            </div>
-            <div class="credits">
-                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
-            </div>
-        </div>
-    </footer> -->
-    <!-- End Footer -->
-
-
+ 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

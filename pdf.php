@@ -11,13 +11,11 @@ $query1 = mysqli_fetch_array($koneksi->query("SELECT * FROM tb_surat WHERE id_su
 // The location of the PDF file
 // on the server
 $extension = pathinfo($query1['nm_file'], PATHINFO_EXTENSION);
-if($extension == 'jpg' || $extension == 'jpeg' || $extension == 'png') {
-    $path = "file/gambar/";
-} else {
-    $path = "file/dokumen/";
-}
 
-$filename = $path.$query1['nm_file'];
+$path = "file/dokumen/";
+
+
+$filename = $path . $query1['nm_file'];
 
 // Header content type
 header("Content-type: application/pdf");
